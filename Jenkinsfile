@@ -50,11 +50,11 @@ pipeline {
         sh '''
         echo ">> Deploy no k3d"
         # Rancher Desktop já deixa o kubeconfig em ~/.kube
-        kubectl config use-context k3d-k3s-default
+        kubectl config use-context rancher-desktop
 
         # Aplica infra primeiro (se tiver)
         if [ -d "${K8S_DIR}/infra" ]; then
-          kubectl apply -f ${K8S_DIR}/infra/
+          kubectl apply -f ${K8S_DIR}/ci-cd/
         fi
 
         # Aplica app
