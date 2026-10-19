@@ -50,3 +50,35 @@ spec:
               port: 8080
             initialDelaySeconds: 3
             periodSeconds: 5
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tst-lambda
+  namespace: app
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: tst-lambda.sanches.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tst-lambda # Nome do seu serviço
+                port:
+                  number: 8080 #
+    - host: lambda.sanches.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tst-lambda # Nome do seu serviço
+                port:
+                  number: 8080 #
+
+
