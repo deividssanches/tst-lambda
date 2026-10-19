@@ -1,0 +1,18 @@
+# Deps e build
+node_modules/
+vendor/
+dist/
+build/
+.terraform/
+*.jar
+*.zip
+
+# Jenkins e k3d
+.jenkins/
+k3d-data/
+
+# Secrets locais
+.env
+.env.local
+*.pem
+*.key

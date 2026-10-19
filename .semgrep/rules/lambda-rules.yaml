@@ -1,0 +1,40 @@
+rules:
+    - id: lambda-no-console-log
+    patterns:
+            - pattern: console.log(...)
+    message: "Use logger estruturado (Winston/Pino) em Lambda, não console.log"
+    languages: [javascript, typescript]
+    severity: WARNING
+
+    - id: lambda-hardcoded-secret
+    patterns:
+            - pattern-regex: (AKIA|aws_secret|password\s*=\s*["'][^"']+)
+    message: "Possível secret hardcoded na Lambda - usar Secrets Manager/SSM"
+    languages: [javascript, typescript, python, go]
+    severity: ERROR
+
+    - id: lambda-wildcard-iam
+    patterns:
+            - pattern: '"Action": "*"'
+            - pattern: '"Resource": "*"'
+    message: "IAM muito permissivo em Lambda - princípio do menor privilégio"
+    languages: [json, yaml]
+    severity: ERROR
+
+    - id: lambda-no-try-catch
+    patterns:
+            - pattern: |
+          exports.handler = async (...) => {
+            ...
+          }
+            - pattern-not-inside: |
+          exports.handler = async (...) => {
+            try {
+              ...
+            } catch (...) {
+              ...
+            }
+          }
+    message: "Handler da Lambda sem try/catch - vai dar cold start silencioso"
+    languages: [javascript, typescript]
+    severity: WARNING

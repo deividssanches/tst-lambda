@@ -45,6 +45,26 @@ pipeline {
       }
     }
 
+  stage('Quality & Sec') {
+    parallel {
+      stage('Semgrep SAST') {
+        steps { sh 'docker run --rm -v $(pwd):/src semgrep/semgrep semgrep --config=auto /src' }
+      }
+      stage('Gitleaks Secrets') {
+        steps { sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source="/path" -v' }
+      }
+    }  
+  }
+
+  stage('Semgrep - SAST + Custom') {
+  steps {
+    sh '''
+      docker run --rm -v $(pwd):/src semgrep/semgrep \
+      semgrep --config=auto --config=/src/.semgrep/rules/ --error /src
+    '''
+  }
+}
+
     stage('Deploy to k3d') {
       steps {
         sh '''
@@ -61,6 +81,8 @@ pipeline {
       }
     }
   }
+
+  
 
   post {
     failure {
