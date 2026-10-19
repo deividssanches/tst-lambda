@@ -53,10 +53,7 @@ pipeline {
         kubectl config use-context rancher-desktop
 
         # Aplica Deployment
-          pwd
-          ls -lhca
           kubectl apply -f ./cicd/deployment.yaml
-
 
         kubectl rollout status deployment -n app -l app=tst-lambda --timeout=60s || true
         kubectl get all -n app
