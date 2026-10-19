@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Template de teste local - DevOps
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: python3.11
+    MemorySize: 512
+
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: lambda_function.lambda_handler
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          ENV: dev
+          BUCKET_NAME: meu-bucket-teste
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: any
+
+  # Exemplo S3 se quiser testar LocalStack
+  MyBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: meu-bucket-teste-dev
+
+Outputs:
+  ApiUrl:
+    Description: URL da API local
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello"
+  FunctionArn:
+    Value: !GetAtt MyFunction.Arn

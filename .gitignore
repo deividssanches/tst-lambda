@@ -1,0 +1,18 @@
+# VScode
+.vscode
+.vscode/*
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+*.code-workspace
+
+# secrets folder
+.secrets/*
+.secret
+
+.DS_Store
+# Sam
+
+.aws-sam/*
+.aws-sam
