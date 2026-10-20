@@ -14,6 +14,43 @@ pipeline {
       }
     }
 
+
+
+  stage('Quality & Sec') {
+    parallel {
+      stage('Semgrep SAST') {
+        steps { 
+            catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE'){
+          sh '''
+          python3 -m venv .venv
+          .venv/bin/pip install --resume-retries 5 semgrep
+          .venv/bin/semgrep  --config=auto
+          
+          ''' 
+          }
+      }
+    }  
+      stage('Gitleaks Secrets') {
+        steps { catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE'){
+            
+            sh 'gitleaks detect --source=. --verbose --report-path=gitleaks-report.json --exit-code=1' }
+        }
+      }  
+    }
+  }
+
+  stage('Semgrep - SAST + Custom') {
+  steps {
+      catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE'){
+    sh '''
+
+    .venv/bin/semgrep --config .semgrep/rules/lambda-rules.yaml .
+    .venv/bin/semgrep --config=auto --config=.semgrep/rules/ --error 
+    '''
+    }
+  }
+}
+
     stage('Build Docker') {
       steps {
         sh '''
@@ -44,26 +81,6 @@ pipeline {
         '''
       }
     }
-
-  stage('Quality & Sec') {
-    parallel {
-      stage('Semgrep SAST') {
-        steps { sh 'docker run --rm -v $(pwd):/src semgrep/semgrep semgrep --config=auto /src' }
-      }
-      stage('Gitleaks Secrets') {
-        steps { sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source="/path" -v' }
-      }
-    }  
-  }
-
-  stage('Semgrep - SAST + Custom') {
-  steps {
-    sh '''
-      docker run --rm -v $(pwd):/src semgrep/semgrep \
-      semgrep --config=auto --config=/src/.semgrep/rules/ --error /src
-    '''
-  }
-}
 
     stage('Deploy to k3d') {
       steps {
