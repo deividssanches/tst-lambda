@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     s3 = boto3.client('s3', 
         endpoint_url=endpoint,
         aws_access_key_id='test',
-        aws_secret_access_key='test',
+        aws_secret_access_key=os.getenv('AWS_SECRET'),
         region_name='us-east-1'
     )
 
