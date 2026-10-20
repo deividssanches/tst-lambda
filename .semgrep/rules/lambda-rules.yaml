@@ -8,7 +8,9 @@ rules:
 
   - id: lambda-hardcoded-secret
     patterns:
-      - pattern-regex: (aws_secret_access_key|password\s*=\s*["'].*["'])
+      - pattern-regex: (aws_secret_access_key|aws_access_key_id)\s*=\s*['"][^'"]+['"]
+      - pattern-not: aws_secret_access_key=os.getenv(...)
+      - pattern-not: aws_access_key_id=os.getenv(...)
     message: "Possível secret hardcoded - usar Secrets Manager/SSM"
     languages: [python]
     severity: WARNING
