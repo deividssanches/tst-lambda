@@ -82,7 +82,7 @@ pipeline {
       }
     }
 
-    stage('Deploy to k3d') {
+    stage('Deploy to k3d Rancher Desktop') {
       steps {
         sh '''
         echo ">> Deploy no k3d"
@@ -103,10 +103,10 @@ pipeline {
 
   post {
     failure {
-      echo "❌ Pipeline falhou. Se foi no Trivy, tem CVE CRITICAL com fix. Veja o log acima."
+      echo "❌ Pipeline falhou. Verifique se foi no Trivy, tem CVE CRITICAL com fix ou se foi no SAST. Veja o log acima."
     }
     success {
-      echo "✅ Build + Scan + Deploy OK no k3d!"
+      echo "✅ Build + Scan + Deploy com Sucesso!!"
     }
   }
 }
