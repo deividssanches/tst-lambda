@@ -18,41 +18,41 @@ spec:
         runAsUser: 1000
       containers:
         - name: lambda
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      image: tst-lambda:k8s
-      imagePullPolicy: Never
-      ports:
-        - containerPort: 8080
-      env:
-        - name: S3_ENDPOINT
-          value: http://localstack.infra.svc.cluster.local:4566
-        - name: AMBIENTE
-          value: prod-k8s-multi-ns
-        - name: AWS_ACCESS_KEY_ID
-          value: test
-        - name: AWS_SECRET_ACCESS_KEY
-          value: test
-        - name: AWS_DEFAULT_REGION
-          value: us-east-1
-      resources:
-        requests:
-          cpu: "100m"
-          memory: "128Mi"
-        limits:
-          cpu: "500m"
-          memory: "256Mi"
-      livenessProbe:
-        httpGet:
-          path: /health
-          port: 8080
-        initialDelaySeconds: 5
-        periodSeconds: 10
-        failureThreshold: 3
-      readinessProbe:
-        httpGet:
-          path: /health
-          port: 8080
-        initialDelaySeconds: 3
-        periodSeconds: 5
+          image: tst-lambda:k8s
+          imagePullPolicy: Never
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          ports:
+            - containerPort: 8080
+          env:
+            - name: S3_ENDPOINT
+              value: http://localstack.infra.svc.cluster.local:4566
+            - name: AMBIENTE
+              value: prod-k8s-multi-ns
+            - name: AWS_ACCESS_KEY_ID
+              value: test
+            - name: AWS_SECRET_ACCESS_KEY
+              value: test
+            - name: AWS_DEFAULT_REGION
+              value: us-east-1
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
