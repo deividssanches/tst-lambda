@@ -18,14 +18,21 @@ rules:
   - id: lambda-no-try-catch-python
     patterns:
       - pattern: |
-          def lambda_handler(...):
-              ...
+          def lambda_handler($EVENT, $CONTEXT):
+              $BODY
       - pattern-not-inside: |
-          def lambda_handler(...):
+          def lambda_handler($EVENT, $CONTEXT):
               try:
-                  ...
-              except ...:
-                  ...
+                  $...BODY
+              except $ERR:
+                  $...HANDLER
+      - pattern-not-inside: |
+          def lambda_handler($EVENT, $CONTEXT):
+              $...BEFORE
+              try:
+                  $...BODY
+              except $ERR:
+                  $...HANDLER
     message: "Handler sem try/except"
     languages: [python]
     severity: WARNING
