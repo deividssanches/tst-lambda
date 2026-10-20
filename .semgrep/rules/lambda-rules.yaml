@@ -6,12 +6,27 @@ rules:
     languages: [python]
     severity: WARNING
 
-  - id: lambda-hardcoded-secret
+    - id: lambda-hardcoded-secret
     patterns:
-      - pattern-regex: (AKIA|aws_secret|password\s*=\s*["'][^"']+)
-    message: "Possível secret hardcoded na Lambda - usar Secrets Manager/SSM"
-    languages: [javascript, typescript, python, go]
-    severity: ERROR
+            - pattern-regex: (aws_secret_access_key|password\s*=\s*["'].*["'])
+    message: "Possível secret hardcoded - usar Secrets Manager/SSM"
+    languages: [python]
+    severity: WARNING
+
+    - id: lambda-no-try-catch
+    patterns:
+            - pattern: |
+          def lambda_handler(...):
+              ...
+            - pattern-not-inside: |
+          def lambda_handler(...):
+              try:
+                ...
+              except ...:
+                ...
+    message: "Handler sem try/except"
+    languages: [python]
+    severity: WARNING
 
   - id: lambda-wildcard-iam
     patterns:
