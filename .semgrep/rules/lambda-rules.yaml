@@ -19,20 +19,15 @@ rules:
     patterns:
       - pattern: |
           def lambda_handler($EVENT, $CONTEXT):
-              $BODY
-      - pattern-not-inside: |
+              ...
+      - pattern-not: |
           def lambda_handler($EVENT, $CONTEXT):
+              ...
               try:
-                  $...BODY
-              except $ERR:
-                  $...HANDLER
-      - pattern-not-inside: |
-          def lambda_handler($EVENT, $CONTEXT):
-              $...BEFORE
-              try:
-                  $...BODY
-              except $ERR:
-                  $...HANDLER
+                  ...
+              except ...:
+                  ...
+              ...
     message: "Handler sem try/except"
     languages: [python]
     severity: WARNING
