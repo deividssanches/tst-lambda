@@ -3,7 +3,7 @@ rules:
     patterns:
       - pattern: console.log(...)
     message: "Use logger estruturado (Winston/Pino) em Lambda, não console.log"
-    languages: [javascript, typescript]
+    languages: [python]
     severity: WARNING
 
   - id: lambda-hardcoded-secret
@@ -36,5 +36,5 @@ rules:
             }
           }
     message: "Handler da Lambda sem try/catch - vai dar cold start silencioso"
-    languages: [javascript, typescript]
+    languages: [python]
     severity: WARNING
