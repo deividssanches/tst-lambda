@@ -22,9 +22,9 @@ pipeline {
         steps { 
             catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE'){
           sh '''
-          python3 -m venv .venv
-          .venv/bin/pip install --resume-retries 5 semgrep
-          .venv/bin/semgrep  --config=auto
+          #python3 -m venv .venv
+          #.venv/bin/pip install --resume-retries 5 semgrep
+          semgrep  --config=auto
           
           ''' 
           }
@@ -33,7 +33,7 @@ pipeline {
       stage('Gitleaks Secrets') {
         steps { catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE'){
             
-            sh 'gitleaks detect --source=. --verbose --report-path=gitleaks-report.json --exit-code=1' }
+            sh 'gitleaks detect --source=. --log-opts="-1" --verbose --report-path=gitleaks-report.json --exit-code=1' }
         }
       }  
     }
@@ -44,8 +44,8 @@ pipeline {
       catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE'){
     sh '''
 
-    .venv/bin/semgrep --config .semgrep/rules/lambda-rules.yaml .
-    .venv/bin/semgrep --config=auto --config=.semgrep/rules/ --error 
+    semgrep --config .semgrep/rules/lambda-rules.yaml .
+    semgrep --config=auto --config=.semgrep/rules/ --error 
     '''
     }
   }
