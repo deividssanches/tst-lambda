@@ -6,24 +6,24 @@ rules:
     languages: [python]
     severity: WARNING
 
-    - id: lambda-hardcoded-secret
+  - id: lambda-hardcoded-secret
     patterns:
-            - pattern-regex: (aws_secret_access_key|password\s*=\s*["'].*["'])
+      - pattern-regex: (aws_secret_access_key|password\s*=\s*["'].*["'])
     message: "Possível secret hardcoded - usar Secrets Manager/SSM"
     languages: [python]
     severity: WARNING
 
-    - id: lambda-no-try-catch
+  - id: lambda-no-try-catch-python
     patterns:
-            - pattern: |
+      - pattern: |
           def lambda_handler(...):
               ...
-            - pattern-not-inside: |
+      - pattern-not-inside: |
           def lambda_handler(...):
               try:
-                ...
+                  ...
               except ...:
-                ...
+                  ...
     message: "Handler sem try/except"
     languages: [python]
     severity: WARNING
@@ -36,7 +36,7 @@ rules:
     languages: [json, yaml]
     severity: ERROR
 
-  - id: lambda-no-try-catch
+  - id: lambda-no-try-catch-js
     patterns:
       - pattern: |
           exports.handler = async (...) => {
@@ -51,5 +51,5 @@ rules:
             }
           }
     message: "Handler da Lambda sem try/catch - vai dar cold start silencioso"
-    languages: [python]
+    languages: [javascript, typescript]
     severity: WARNING
