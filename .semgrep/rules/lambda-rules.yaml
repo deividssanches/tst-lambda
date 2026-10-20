@@ -39,15 +39,15 @@ rules:
   - id: lambda-no-try-catch-js
     patterns:
       - pattern: |
-          exports.handler = async (...) => {
-            ...
+          exports.handler = async ($...ARGS) => {
+            $BODY
           }
       - pattern-not-inside: |
-          exports.handler = async (...) => {
+          exports.handler = async ($...ARGS) => {
             try {
-              ...
-            } catch (...) {
-              ...
+              $...BODY
+            } catch ($ERR) {
+              $...H
             }
           }
     message: "Handler da Lambda sem try/catch - vai dar cold start silencioso"
